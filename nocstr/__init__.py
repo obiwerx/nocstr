@@ -1,0 +1,1 @@
+from .nocstr import app

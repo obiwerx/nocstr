@@ -1,0 +1,44 @@
+<doctype html>
+<head>
+  <title>Nocstr</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="NOCATRON 9000">
+  <meta name="author" content="Tim O'Brien">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<div class="jumbotron">
+  <h1 class="text-center">
+    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+    <strong>Nocstr: NetOps Automation</strong>
+    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span></h1>
+  </h1>
+</div>
+  <div class=metanav>
+  {% if not session.logged_in %}
+    <a href="{{ url_for('login') }}" class="btn btn-info" role="button">log in</a>
+  {% else %}
+    <h5 class="text-right"><strong>COMMANDS AVAILABLE TO YOU</strong></h5>
+    <a href="{{ url_for('show_entries')}}" class="btn btn-success" role="button">Home</a>
+    <a href="{{ url_for('show_audit')}}" class="btn btn-warning" role="button">Audit Log</a>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger" role="button">log out</a>
+  {% endif %}
+  </div>
+  {% for message in get_flashed_messages() %}
+    <div class="flash text-center">{{ message }}</div>
+  {% endfor %}
+  {% block body %}{% endblock %}
+
+<!--The Magic Happens within these Scripts -->
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
+<script src="static/js/motorhead.js"></script>
+<script src="static/js/npm.js"></script>
+
+<!--Footer -->
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">&copy Network Team A: FSCK! YEAH!  All Awesomness Reserved!</span>
+  </div>
+</footer>

@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      <div id="hc_panel" class="panel panel-info">
+        <div class="panel-heading text-center">
+          <strong>Log Options</strong>
+          <div id="lo" class="panel panel-body">
+            <form action="{{ url_for('get_records') }}" method=post>
+              <dl>
+                <span>
+                 <p>Number of Entries to retrieve<input type=INTEGER size=5 name=limit>
+                <input type=submit value="view"></p>
+                </span>
+              </dl>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="hc_panel" class="panel panel-info">
+        <div class="panel-heading text-center">
+          <strong>Export Options</strong>
+          <div id="lo" class="panel panel-body">
+            <a href="{{ url_for('show_entries')}}" class="btn btn-info" role="button">Export to Excel</a>
+            <a href="{{ url_for('show_audit')}}" class="btn btn-info" role="button">Export to PDF</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 well">
+      <h2 class="text-center">NOCATRON 9000 AUDIT LOG</h2>
+      <table style="width:100%">
+        <tr>
+          <th>Time Stamp</th>
+          <th>Incident</th>
+          <th>Who performed task</th>
+          <th>Configuration Item</th>
+        </tr>
+      {% for log in logFile %}
+      <tr>
+        <td>{{ log.timeStamp }}</td>
+        <td>{{ log.incident }}</td>
+        <td>{{ log.userName }}</td>
+        <td>{{ log.realServer }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+{% endblock %}

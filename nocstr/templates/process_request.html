@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% block body %}
+<!--Container for OOS/BIS and CI status information-->
+ <div class="container">
+   <div class="row">
+     <!--This div holds the OOS button -->
+     <div class="col-md-4 well text-center">
+       <form action="{{ url_for('out_of_service') }}" method=post>
+         <dl>
+           <h4>Click Below to take server OOS:</h4>
+           </br>
+           <dd><input type=submit value="Take OOS">
+        </dl>
+      </form>
+    </div>
+    <!--This div holds the CI status info it pulls from the iControl REST -->
+    <div class="col-md-4 well">
+      <h4 class="text-center">Affected CI's Current State</h4>
+      <table style="width:100%">
+      <!--The Jinja logic here pulls CI information from a stored JSON object-->
+      <tr ><td><strong>CI Name: </strong></td><td>{{ resp_json.name }}</td></tr>
+      <tr ><td><strong>IP Address: </strong></td><td>{{ resp_json.address }}</td></tr>
+      <tr><td><strong>Session State: </strong></td><td>{{ resp_json.session }}</td></tr>
+      <tr><td><strong>Status: </strong></td><td>{{ resp_json.state }}</td></tr>
+    </table>
+    </div>
+    <!--this div holds the BIS button -->
+    <div class="col-md-4 well text-center">
+      <form action="{{ url_for('back_in_service') }}" method=post>
+        <dl>
+          <h4>Click Below to put server BIS:</h4>
+          </br>
+          <dd><input type=submit value="Put BIS">
+       </dl>
+     </form>
+   </div>
+ </div>
+
+<!--NOTIFICATION PANELS for verification checks-->
+<div class="container text-center">
+    <div class="row">
+      <!-- Health Check Notification panel and logic -->
+    <div class="col-md-4">
+      <div id="hc_panel" class="panel panel-info">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          <strong>HEALTH CHECK</strong>
+          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></div>
+          <div id="hc" class="panel panel-body text-center">
+            <table style="width:100%">
+            <!--The Jinja logic here pulls CI information from a stored JSON object-->
+              <tr>
+                <td><strong>User CPU:</strong></td>
+                <td>{{ resp_health['entries']['https://localhost/mgmt/tm/sys/cpu/0']['nestedStats']['entries']['https://localhost/mgmt/tm/sys/cpu/0/cpuInfo']['nestedStats']['entries']['https://localhost/mgmt/tm/sys/cpu/0/cpuInfo/1']['nestedStats']['entries']['fiveMinAvgUser']['value']}}%</td>
+              </tr>
+              <tr>
+                <td><strong>System CPU:</strong></td>
+              <td>{{ resp_health['entries']['https://localhost/mgmt/tm/sys/cpu/0']['nestedStats']['entries']['https://localhost/mgmt/tm/sys/cpu/0/cpuInfo']['nestedStats']['entries']['https://localhost/mgmt/tm/sys/cpu/0/cpuInfo/1']['nestedStats']['entries']['fiveMinAvgSystem']['value']}}%</td>
+              </tr>
+            </table>
+          </div>
+      </div>
+    </div>
+
+        <!-- Sync Check Notification panel and logic -->
+    <div class="col-md-4">
+      <div id="sc_panel" class="panel panel-info">
+        <div class="panel-heading">
+          <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+          <strong>SYNC CHECK</strong>
+          <span class="glyphicon glyphicon-random" aria-hidden="true"></span></div>
+          <div class="panel panel-body text-center">
+            <table style="width:100%">
+            <!--The Jinja logic here pulls CI information from a stored JSON object-->
+              <tr ><td><strong>Status:</strong></td><td>
+                <strong class='passed'>{{ resp_sync['entries']['https://localhost/mgmt/tm/cm/sync-status/0']['nestedStats']['entries']['color']['description'] }}
+                </td></tr>
+          </table>
+          </div>
+      </div>
+    </div>
+
+        <!-- Pool Check Notification and logic -->
+    <div class="col-md-4">
+      <div id="pc_panel" class="panel panel-info">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+          <strong>POOL CHECK</strong>
+            <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></div>
+          <div class="panel panel-body">
+            <table style="width: 100%">
+              <!--The Jinja logic here pulls CI information from a stored JSON object-->
+              <tr>
+                <td><strong>Pool Member</strong></td>
+                  <td><strong>Status</strong></td>
+                <tr>
+            {% for item in resp_pool['items'] %}
+                <td>{{ item['name'] }}</td>
+                <td>{{ item['state'] }}</td>
+              </tr>
+
+              {% endfor %}
+            </table>
+          </div>
+      </div>
+    </div>
+
+{% endblock %}
